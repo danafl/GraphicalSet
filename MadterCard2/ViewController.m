@@ -31,6 +31,8 @@
 @implementation ViewController
 
 static const float ASPECT_RATIO = 0.6;
+static const int MAX_CARD_HEIGHT = 100;
+
 
 -(NSMutableArray *)cardsViews {
   if(!_cardsViews) {
@@ -53,37 +55,61 @@ static const float ASPECT_RATIO = 0.6;
 
 -(void)viewDidLayoutSubviews {
   [self changeGridAccordingToLayout];
-  NSLog(@"cardsView count: %lu",[self.cardsViews count] );
-  for(int cardIndex = 0; cardIndex < [self.cardsViews count]; cardIndex++) {
-    PlayingCardView *cardView = [self.cardsViews objectAtIndex:cardIndex];
-    int cardRow = cardIndex / self.gameGrid.columnCount;
-    int cardColumn = cardIndex % self.gameGrid.columnCount;
-    cardView.frame = [self.gameGrid frameOfCellAtRow:cardRow inColumn:cardColumn];
-    [self.gameView addSubview:cardView];
-  }
+  [self putCardViewsInDeck];
 
-  /*int cardXPosition = (self.gameView.bounds.size.width - self.gameGrid.cellSize.width)/ 2;
-  int cardYPosition = (self.gameView.bounds.size.height - self.gameGrid.cellSize.height);
+}
 
-  int change = 0;
-  for(PlayingCardView *cardView in self.cardsViews) {
-    CGRect newCardFrame = CGRectMake(cardXPosition, cardYPosition - change,
-                                     self.gameGrid.cellSize.width,
-                                     self.gameGrid.cellSize.height);
-    cardView.frame = newCardFrame;
-    change += 1;
-    [self.gameView addSubview:cardView];
-  }*/
-
+-(void)viewDidAppear:(BOOL)animated
+{
+  [super viewDidAppear:animated];
+  [self dealCards];
 }
 
 - (void)changeGridAccordingToLayout {
-  self.gameGrid.size = self.gameView.bounds.size;
-  self.gameGrid.cellAspectRatio = ASPECT_RATIO;
   self.gameGrid.minimumNumberOfCells = [self getNumerOfCards];
+  self.gameGrid.size = CGSizeMake(self.gameView.frame.size.width,
+                                  self.gameView.frame.size.height - MAX_CARD_HEIGHT) ;
+  self.gameGrid.cellAspectRatio = ASPECT_RATIO;
+  self.gameGrid.maxCellHeight = MAX_CARD_HEIGHT;
 }
 
-//////////////////////////////////////////////////
+- (void)putCardViewsInDeck {
+  int cardXPosition = (self.gameView.bounds.size.width - self.gameGrid.cellSize.width)/ 2;
+  int cardYPosition = (self.gameView.bounds.size.height - self.gameGrid.cellSize.height);
+
+
+  for(PlayingCardView *cardView in self.cardsViews) {
+    CGRect newCardFrame = CGRectMake(cardXPosition, cardYPosition,
+                                     self.gameGrid.cellSize.width,
+                                     self.gameGrid.cellSize.height);
+    cardView.frame = newCardFrame;
+    [self.gameView addSubview:cardView];
+  }
+}
+
+- (void)dealCards {
+  [UIView animateWithDuration:1.0
+                        delay:1.0
+                      options:UIViewAnimationOptionCurveEaseIn
+                   animations:^{
+    for(int cardIndex = 0; cardIndex < [self.cardsViews count]; cardIndex++) {
+      PlayingCardView *cardView = [self.cardsViews objectAtIndex:cardIndex];
+      int cardRow = cardIndex / self.gameGrid.columnCount;
+      int cardColumn = cardIndex % self.gameGrid.columnCount;
+      cardView.frame = [self.gameGrid frameOfCellAtRow:cardRow inColumn:cardColumn];
+    }
+  }
+                   completion:^(BOOL finished){}];
+  /*[UIView animateWithDuration:1.0 delay:1.0 animations:^{
+    for(int cardIndex = 0; cardIndex < [self.cardsViews count]; cardIndex++) {
+      PlayingCardView *cardView = [self.cardsViews objectAtIndex:cardIndex];
+      int cardRow = cardIndex / self.gameGrid.columnCount;
+      int cardColumn = cardIndex % self.gameGrid.columnCount;
+      cardView.frame = [self.gameGrid frameOfCellAtRow:cardRow inColumn:cardColumn];
+    }
+  }];*/
+}
+
 - (void)makeGameViewTransparent {
   self.gameView.opaque = NO;
   self.gameView.backgroundColor = [UIColor clearColor];
@@ -97,8 +123,8 @@ static const float ASPECT_RATIO = 0.6;
     newCardView.rank = card.rank;
     [self.cardsViews addObject:newCardView];
   }
-
 }
+
 
 
 - (CardMatchingGame *)game{
@@ -120,7 +146,7 @@ static const float ASPECT_RATIO = 0.6;
 
 //////////////////////////////////////////////////////////////////////////
 -(NSUInteger)getNumerOfCards {
-  return 12;
+  return 50;
 }
 
 - (IBAction)touchCArdButton:(UIButton *)sender {
