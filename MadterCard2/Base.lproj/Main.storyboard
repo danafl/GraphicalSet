@@ -1,0 +1,223 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="10117" systemVersion="15F34" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" initialViewController="wAB-2W-IUI">
+    <dependencies>
+        <deployment identifier="iOS"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="10085"/>
+        <capability name="Alignment constraints to the first baseline" minToolsVersion="6.0"/>
+        <capability name="Alignment constraints with different attributes" minToolsVersion="5.1"/>
+        <capability name="Constraints to layout margins" minToolsVersion="6.0"/>
+    </dependencies>
+    <scenes>
+        <!--PlayingGame-->
+        <scene sceneID="tne-QT-ifu">
+            <objects>
+                <viewController id="BYZ-38-t0r" customClass="PlayingCardViewController" sceneMemberID="viewController">
+                    <layoutGuides>
+                        <viewControllerLayoutGuide type="top" id="y3c-jy-aDJ"/>
+                        <viewControllerLayoutGuide type="bottom" id="wfy-db-euE"/>
+                    </layoutGuides>
+                    <view key="view" contentMode="scaleToFill" id="8bC-Xf-vdC">
+                        <rect key="frame" x="0.0" y="0.0" width="600" height="600"/>
+                        <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+                        <subviews>
+                            <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="IBA-1m-ZcU">
+                                <rect key="frame" x="505" y="523" width="75" height="20"/>
+                                <constraints>
+                                    <constraint firstAttribute="width" constant="75" id="DUJ-DG-SAP"/>
+                                    <constraint firstAttribute="height" constant="20" id="g6Q-tO-1y3"/>
+                                </constraints>
+                                <state key="normal" title="Reset" backgroundImage="carfront">
+                                    <color key="titleColor" white="0.0" alpha="1" colorSpace="calibratedWhite"/>
+                                </state>
+                                <variation key="heightClass=regular-widthClass=compact" fixedFrame="YES">
+                                    <rect key="frame" x="266" y="627" width="61" height="30"/>
+                                </variation>
+                                <connections>
+                                    <action selector="touchResetButton:" destination="BYZ-38-t0r" eventType="touchUpInside" id="69I-MU-Ghj"/>
+                                </connections>
+                            </button>
+                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" text="Score: 0" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="4XW-Kj-Wwj">
+                                <rect key="frame" x="20" y="523" width="75" height="20"/>
+                                <constraints>
+                                    <constraint firstAttribute="height" constant="20" id="uR5-ub-WBl"/>
+                                    <constraint firstAttribute="width" constant="75" id="ucc-j1-Oze"/>
+                                </constraints>
+                                <fontDescription key="fontDescription" type="system" pointSize="17"/>
+                                <color key="textColor" cocoaTouchSystemColor="darkTextColor"/>
+                                <nil key="highlightedColor"/>
+                                <variation key="heightClass=regular-widthClass=compact" fixedFrame="YES">
+                                    <rect key="frame" x="20" y="627" width="553" height="21"/>
+                                </variation>
+                            </label>
+                            <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="e8M-BL-mQx">
+                                <rect key="frame" x="20" y="20" width="560" height="495"/>
+                                <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                            </view>
+                        </subviews>
+                        <color key="backgroundColor" red="0.059282607770000002" green="0.55761207459999995" blue="0.074997112089999998" alpha="1" colorSpace="calibratedRGB"/>
+                        <constraints>
+                            <constraint firstItem="4XW-Kj-Wwj" firstAttribute="top" secondItem="e8M-BL-mQx" secondAttribute="bottom" constant="8" symbolic="YES" id="0Rl-7Y-fpa"/>
+                            <constraint firstItem="e8M-BL-mQx" firstAttribute="trailing" secondItem="IBA-1m-ZcU" secondAttribute="trailing" id="3td-qA-nvd"/>
+                            <constraint firstItem="wfy-db-euE" firstAttribute="top" secondItem="IBA-1m-ZcU" secondAttribute="bottom" constant="8" symbolic="YES" id="Aaa-sH-ZWq"/>
+                            <constraint firstItem="IBA-1m-ZcU" firstAttribute="trailing" secondItem="8bC-Xf-vdC" secondAttribute="trailingMargin" id="DCD-AE-YDo"/>
+                            <constraint firstItem="4XW-Kj-Wwj" firstAttribute="leading" secondItem="8bC-Xf-vdC" secondAttribute="leadingMargin" id="ICa-hB-VkX"/>
+                            <constraint firstItem="e8M-BL-mQx" firstAttribute="leading" secondItem="4XW-Kj-Wwj" secondAttribute="leading" id="J5n-v4-hFD"/>
+                            <constraint firstItem="e8M-BL-mQx" firstAttribute="top" secondItem="y3c-jy-aDJ" secondAttribute="bottom" id="Ldy-Hc-KTU"/>
+                            <constraint firstItem="4XW-Kj-Wwj" firstAttribute="baseline" secondItem="IBA-1m-ZcU" secondAttribute="baseline" id="ZvT-OZ-ltj"/>
+                            <constraint firstItem="wfy-db-euE" firstAttribute="top" secondItem="4XW-Kj-Wwj" secondAttribute="bottom" constant="8" symbolic="YES" id="bMn-de-RLY"/>
+                            <constraint firstItem="IBA-1m-ZcU" firstAttribute="trailing" secondItem="8bC-Xf-vdC" secondAttribute="trailingMargin" id="fjl-PB-fmd"/>
+                            <constraint firstItem="IBA-1m-ZcU" firstAttribute="trailing" secondItem="8bC-Xf-vdC" secondAttribute="trailingMargin" id="mCp-et-uXX"/>
+                            <constraint firstItem="wfy-db-euE" firstAttribute="top" secondItem="IBA-1m-ZcU" secondAttribute="bottom" constant="8" symbolic="YES" id="oSd-RH-lk8"/>
+                            <constraint firstItem="4XW-Kj-Wwj" firstAttribute="baseline" secondItem="IBA-1m-ZcU" secondAttribute="firstBaseline" id="odB-gL-aTa"/>
+                            <constraint firstItem="e8M-BL-mQx" firstAttribute="leading" secondItem="4XW-Kj-Wwj" secondAttribute="leading" id="qQC-nc-liI"/>
+                            <constraint firstItem="IBA-1m-ZcU" firstAttribute="top" secondItem="e8M-BL-mQx" secondAttribute="bottom" constant="37.5" id="si6-PQ-Gth"/>
+                        </constraints>
+                        <variation key="default">
+                            <mask key="constraints">
+                                <exclude reference="J5n-v4-hFD"/>
+                                <exclude reference="ZvT-OZ-ltj"/>
+                                <exclude reference="oSd-RH-lk8"/>
+                                <exclude reference="fjl-PB-fmd"/>
+                                <exclude reference="mCp-et-uXX"/>
+                                <exclude reference="si6-PQ-Gth"/>
+                            </mask>
+                        </variation>
+                    </view>
+                    <tabBarItem key="tabBarItem" title="PlayingGame" id="Q2I-MP-zUC"/>
+                    <navigationItem key="navigationItem" id="otn-yn-5sN">
+                        <barButtonItem key="rightBarButtonItem" title="History" id="ulU-C4-mAp"/>
+                    </navigationItem>
+                    <connections>
+                        <outlet property="gameView" destination="e8M-BL-mQx" id="uCd-rq-bg6"/>
+                        <outlet property="scoreLabel" destination="4XW-Kj-Wwj" id="dbG-4k-ZYs"/>
+                    </connections>
+                </viewController>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="dkx-z0-nzr" sceneMemberID="firstResponder"/>
+            </objects>
+            <point key="canvasLocation" x="708" y="-207"/>
+        </scene>
+        <!--Tab Bar Controller-->
+        <scene sceneID="aKk-mT-JJp">
+            <objects>
+                <tabBarController id="wAB-2W-IUI" sceneMemberID="viewController">
+                    <tabBar key="tabBar" contentMode="scaleToFill" id="t4o-SA-0tf">
+                        <rect key="frame" x="0.0" y="0.0" width="320" height="49"/>
+                        <autoresizingMask key="autoresizingMask"/>
+                        <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="calibratedWhite"/>
+                    </tabBar>
+                    <connections>
+                        <segue destination="BYZ-38-t0r" kind="relationship" relationship="viewControllers" id="P2P-g0-U3g"/>
+                        <segue destination="eJh-6L-OGu" kind="relationship" relationship="viewControllers" id="BiF-R7-RtE"/>
+                    </connections>
+                </tabBarController>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="Ju9-bO-h63" userLabel="First Responder" sceneMemberID="firstResponder"/>
+            </objects>
+            <point key="canvasLocation" x="-286.5" y="149.25"/>
+        </scene>
+        <!--SetGame-->
+        <scene sceneID="thr-mK-Xjk">
+            <objects>
+                <viewController id="eJh-6L-OGu" customClass="SetGameCardViewController" sceneMemberID="viewController">
+                    <layoutGuides>
+                        <viewControllerLayoutGuide type="top" id="YTh-SK-CMe"/>
+                        <viewControllerLayoutGuide type="bottom" id="99Z-KJ-xVk"/>
+                    </layoutGuides>
+                    <view key="view" contentMode="scaleToFill" id="dnv-cq-88a">
+                        <rect key="frame" x="0.0" y="0.0" width="600" height="600"/>
+                        <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+                        <subviews>
+                            <button opaque="NO" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="lN2-tQ-RAk">
+                                <rect key="frame" x="20" y="133" width="71" height="97"/>
+                                <state key="normal" backgroundImage="carfront">
+                                    <color key="titleColor" white="0.0" alpha="1" colorSpace="calibratedWhite"/>
+                                </state>
+                                <variation key="heightClass=regular-widthClass=compact" fixedFrame="YES">
+                                    <rect key="frame" x="20" y="155" width="59" height="82"/>
+                                </variation>
+                                <connections>
+                                    <action selector="touchCArdButton:" destination="BYZ-38-t0r" eventType="touchUpInside" id="g8U-DA-M4p"/>
+                                    <action selector="touchCArdButton:" destination="eJh-6L-OGu" eventType="touchUpInside" id="nFv-4w-ubU"/>
+                                </connections>
+                            </button>
+                            <button opaque="NO" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="HsW-5h-MC4">
+                                <rect key="frame" x="99" y="131" width="71" height="98"/>
+                                <state key="normal" backgroundImage="carfront">
+                                    <color key="titleColor" white="0.0" alpha="1" colorSpace="calibratedWhite"/>
+                                </state>
+                                <variation key="heightClass=regular-widthClass=compact" fixedFrame="YES">
+                                    <rect key="frame" x="81" y="155" width="63" height="82"/>
+                                </variation>
+                                <connections>
+                                    <action selector="touchCArdButton:" destination="BYZ-38-t0r" eventType="touchUpInside" id="iVO-zb-Y6a"/>
+                                    <action selector="touchCArdButton:" destination="eJh-6L-OGu" eventType="touchUpInside" id="x6H-k7-y8n"/>
+                                </connections>
+                            </button>
+                            <button opaque="NO" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="r1U-5m-0cb">
+                                <rect key="frame" x="262" y="132" width="71" height="98"/>
+                                <state key="normal" backgroundImage="carfront">
+                                    <color key="titleColor" white="0.0" alpha="1" colorSpace="calibratedWhite"/>
+                                </state>
+                                <variation key="heightClass=regular-widthClass=compact" fixedFrame="YES">
+                                    <rect key="frame" x="209" y="155" width="61" height="82"/>
+                                </variation>
+                                <connections>
+                                    <action selector="touchCArdButton:" destination="BYZ-38-t0r" eventType="touchUpInside" id="CnV-Ou-R1f"/>
+                                    <action selector="touchCArdButton:" destination="eJh-6L-OGu" eventType="touchUpInside" id="sZT-R6-boH"/>
+                                </connections>
+                            </button>
+                            <button opaque="NO" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="DGk-Xk-hxC">
+                                <rect key="frame" x="178" y="132" width="71" height="98"/>
+                                <state key="normal" backgroundImage="carfront">
+                                    <color key="titleColor" white="0.0" alpha="1" colorSpace="calibratedWhite"/>
+                                </state>
+                                <variation key="heightClass=regular-widthClass=compact" fixedFrame="YES">
+                                    <rect key="frame" x="146" y="155" width="62" height="82"/>
+                                </variation>
+                                <connections>
+                                    <action selector="touchCArdButton:" destination="eJh-6L-OGu" eventType="touchUpInside" id="3g9-vE-7j7"/>
+                                    <action selector="touchCArdButton:" destination="BYZ-38-t0r" eventType="touchUpInside" id="oKw-bi-tTp"/>
+                                </connections>
+                            </button>
+                            <button opaque="NO" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="J5E-Zf-smk">
+                                <rect key="frame" x="272" y="513" width="61" height="30"/>
+                                <state key="normal" title="Reset" backgroundImage="carfront">
+                                    <color key="titleColor" white="0.0" alpha="1" colorSpace="calibratedWhite"/>
+                                </state>
+                                <variation key="heightClass=regular-widthClass=compact" fixedFrame="YES">
+                                    <rect key="frame" x="266" y="627" width="61" height="30"/>
+                                </variation>
+                                <connections>
+                                    <action selector="touchResetButton:" destination="BYZ-38-t0r" eventType="touchUpInside" id="TaI-lj-pkA"/>
+                                    <action selector="touchResetButton:" destination="eJh-6L-OGu" eventType="touchUpInside" id="cbH-hk-feo"/>
+                                </connections>
+                            </button>
+                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" text="Score: 0" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="YCt-ev-htM">
+                                <rect key="frame" x="20" y="517" width="64" height="21"/>
+                                <fontDescription key="fontDescription" type="system" pointSize="17"/>
+                                <color key="textColor" cocoaTouchSystemColor="darkTextColor"/>
+                                <nil key="highlightedColor"/>
+                            </label>
+                        </subviews>
+                        <color key="backgroundColor" red="0.059282607770000002" green="0.55761207459999995" blue="0.074997112089999998" alpha="1" colorSpace="calibratedRGB"/>
+                    </view>
+                    <tabBarItem key="tabBarItem" title="SetGame" id="kKY-pV-KBu"/>
+                    <navigationItem key="navigationItem" id="DZi-Nh-C15">
+                        <barButtonItem key="rightBarButtonItem" title="History" id="AoS-ko-ZFQ"/>
+                    </navigationItem>
+                    <connections>
+                        <outlet property="scoreLabel" destination="YCt-ev-htM" id="BIa-kV-C4M"/>
+                        <outletCollection property="cardButtons" destination="r1U-5m-0cb" id="Cpa-za-z31"/>
+                        <outletCollection property="cardButtons" destination="DGk-Xk-hxC" id="Zta-Jw-4nG"/>
+                        <outletCollection property="cardButtons" destination="HsW-5h-MC4" id="vjC-iD-CIe"/>
+                        <outletCollection property="cardButtons" destination="lN2-tQ-RAk" id="Wgy-LT-r80"/>
+                    </connections>
+                </viewController>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="FoP-Fk-UH6" userLabel="First Responder" sceneMemberID="firstResponder"/>
+            </objects>
+            <point key="canvasLocation" x="708" y="469"/>
+        </scene>
+    </scenes>
+    <resources>
+        <image name="carfront" width="64" height="96"/>
+    </resources>
+</document>
