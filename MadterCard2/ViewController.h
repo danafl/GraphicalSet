@@ -13,11 +13,18 @@
 
 - (void)updateUI;
 - (Deck *)createDeck;
-- (void) markCard:(UIButton *)cardButton ifSelected:(Card *)card;
-- (void)updateCardButtonTitle:(UIButton *)cardButton byCard:(Card *)card;
-- (UIImage *)backgroundImageCard:(Card *)card;
+- (void)updateCardViewAsSelectedOrNot:(UIView *)cardView accordingToCard:(Card *)card;
 - (NSInteger)getPlayMode;
-- (void)initializeCardsViews;
+- (void)initializeCardsViews:(NSMutableArray *)cardsViews accordingToCards:(NSMutableArray *)cards;
+- (NSUInteger)getNumberOfCards;
+
+/*
+ - (void)updateCardButtonTitle:(UIButton *)cardButton byCard:(Card *)card;
+ - (UIImage *)backgroundImageCard:(Card *)card;
+ */
+
+
+
 
 @end
 

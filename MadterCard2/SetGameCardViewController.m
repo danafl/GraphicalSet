@@ -73,7 +73,7 @@ static const int PLAY_MODE_TYPE = 3;
   return color;
 }
 
-//abstract
+//cahnged it's name to updateCardViewAfterSelected!!!! need to implement here
 - (void) markCard:(UIButton *)cardButton ifSelected:(Card *)card{
   if(card.isChosen)
   {

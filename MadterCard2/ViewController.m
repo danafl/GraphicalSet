@@ -9,9 +9,8 @@
 
 #import "ViewController.h"
 #import "CardMatchingGame.h"
-#import "PlayingCardView.h"
-#import "PlayingCard.h"
 #import "Grid.h"
+#import "CardView.h"
 
 
 
@@ -20,9 +19,9 @@
 @property (weak, nonatomic) IBOutlet UILabel *scoreLabel;
 @property (strong, nonatomic) IBOutletCollection(UIButton) NSArray *cardButtons;
 @property (strong, nonatomic) CardMatchingGame *game;
-@property (strong, nonatomic) NSMutableArray *cardsViews;
 @property (weak, nonatomic) IBOutlet UIView *gameView;
 @property (strong, nonatomic) Grid *gameGrid;
+@property (strong, nonatomic) NSMutableArray *cardsViews;
 
 
 @end
@@ -50,35 +49,56 @@ static const int MAX_CARD_HEIGHT = 100;
 
 - (void)viewDidLoad {
   [self makeGameViewTransparent];
-  [self initializeCardsViews];
+  [self initializeCardsViews:self.cardsViews accordingToCards:self.game.cards];
+  for(UIView *cardView in self.cardsViews) {
+    [cardView addGestureRecognizer:[[UITapGestureRecognizer alloc] initWithTarget:self	action:@selector(tapCardView:)]];
+  }
 }
 
 -(void)viewDidLayoutSubviews {
   [self changeGridAccordingToLayout];
-  [self putCardViewsInDeck];
+  [self updateCardViewsLocations];
 
 }
 
 -(void)viewDidAppear:(BOOL)animated
 {
+  //needs to take care of switching between the games!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
   [super viewDidAppear:animated];
+  [self putCardViewsInDeck];
   [self dealCards];
 }
 
+- (void)makeGameViewTransparent {
+  self.gameView.opaque = NO;
+  self.gameView.backgroundColor = [UIColor clearColor];
+}
+
+- (void)initializeCardsViews:(NSMutableArray *)cardsViews accordingToCards:(NSMutableArray *)cards{
+
+}
+
 - (void)changeGridAccordingToLayout {
-  self.gameGrid.minimumNumberOfCells = [self getNumerOfCards];
+  self.gameGrid.minimumNumberOfCells = [self getNumberOfCards];
   self.gameGrid.size = CGSizeMake(self.gameView.frame.size.width,
                                   self.gameView.frame.size.height - MAX_CARD_HEIGHT) ;
   self.gameGrid.cellAspectRatio = ASPECT_RATIO;
   self.gameGrid.maxCellHeight = MAX_CARD_HEIGHT;
 }
 
+-(void)updateCardViewsLocations {
+  for(int cardIndex = 0; cardIndex < [self.cardsViews count]; cardIndex++) {
+    UIView *cardView = [self.cardsViews objectAtIndex:cardIndex];
+    int cardRow = cardIndex / self.gameGrid.columnCount;
+    int cardColumn = cardIndex % self.gameGrid.columnCount;
+    cardView.frame = [self.gameGrid frameOfCellAtRow:cardRow inColumn:cardColumn];
+  }
+}
+
 - (void)putCardViewsInDeck {
   int cardXPosition = (self.gameView.bounds.size.width - self.gameGrid.cellSize.width)/ 2;
   int cardYPosition = (self.gameView.bounds.size.height - self.gameGrid.cellSize.height);
-
-
-  for(PlayingCardView *cardView in self.cardsViews) {
+  for(UIView *cardView in self.cardsViews) {
     CGRect newCardFrame = CGRectMake(cardXPosition, cardYPosition,
                                      self.gameGrid.cellSize.width,
                                      self.gameGrid.cellSize.height);
@@ -88,52 +108,23 @@ static const int MAX_CARD_HEIGHT = 100;
 }
 
 - (void)dealCards {
+  __weak ViewController *weakSelf = self;
   [UIView animateWithDuration:1.0
                         delay:1.0
                       options:UIViewAnimationOptionCurveEaseIn
                    animations:^{
-    for(int cardIndex = 0; cardIndex < [self.cardsViews count]; cardIndex++) {
-      PlayingCardView *cardView = [self.cardsViews objectAtIndex:cardIndex];
-      int cardRow = cardIndex / self.gameGrid.columnCount;
-      int cardColumn = cardIndex % self.gameGrid.columnCount;
-      cardView.frame = [self.gameGrid frameOfCellAtRow:cardRow inColumn:cardColumn];
-    }
-  }
+                     [weakSelf updateCardViewsLocations];
+                   }
                    completion:^(BOOL finished){}];
-  /*[UIView animateWithDuration:1.0 delay:1.0 animations:^{
-    for(int cardIndex = 0; cardIndex < [self.cardsViews count]; cardIndex++) {
-      PlayingCardView *cardView = [self.cardsViews objectAtIndex:cardIndex];
-      int cardRow = cardIndex / self.gameGrid.columnCount;
-      int cardColumn = cardIndex % self.gameGrid.columnCount;
-      cardView.frame = [self.gameGrid frameOfCellAtRow:cardRow inColumn:cardColumn];
-    }
-  }];*/
 }
-
-- (void)makeGameViewTransparent {
-  self.gameView.opaque = NO;
-  self.gameView.backgroundColor = [UIColor clearColor];
-}
-
-- (void)initializeCardsViews{
-  for(PlayingCard *card in self.game.cards) {
-    CGRect newCardFrame = CGRectMake(0, 0, 40, 64);
-    PlayingCardView *newCardView = [[PlayingCardView alloc] initWithFrame:newCardFrame];
-    newCardView.suit = card.suit;
-    newCardView.rank = card.rank;
-    [self.cardsViews addObject:newCardView];
-  }
-}
-
 
 
 - (CardMatchingGame *)game{
   if(!_game)
   {
-    _game = [[CardMatchingGame alloc] initWithCardCount:[self getNumerOfCards]
+    _game = [[CardMatchingGame alloc] initWithCardCount:[self getNumberOfCards]
                                               usingDeck:[self createDeck]
                                            withPlayMode:[self getPlayMode]];
-
   }
   return _game;
 }
@@ -144,13 +135,12 @@ static const int MAX_CARD_HEIGHT = 100;
   return nil;
 }
 
-//////////////////////////////////////////////////////////////////////////
--(NSUInteger)getNumerOfCards {
-  return 50;
+- (NSUInteger)getNumberOfCards {
+  return 0;
 }
 
-- (IBAction)touchCArdButton:(UIButton *)sender {
-  NSInteger cardIndex = [self.cardButtons indexOfObject:sender];
+- (IBAction)tapCardView:(UITapGestureRecognizer *)gesture{
+  NSInteger cardIndex = [self.cardsViews indexOfObject:gesture.view];
   [self.game chooseCardAtIndex:cardIndex];
   [self updateUI];
 }
@@ -166,24 +156,34 @@ static const int MAX_CARD_HEIGHT = 100;
 
 - (void)updateUI
 {
-  for(UIButton *cardButton in self.cardButtons)
-  {
-    NSInteger cardIndex = [self.cardButtons indexOfObject:cardButton];
+  for(UIView *cardView in self.cardsViews) {
+    NSInteger cardIndex = [self.cardsViews indexOfObject:cardView];
     Card *card = [self.game cardAtIndex:cardIndex];
+    [self updateCardViewAsSelectedOrNot:cardView accordingToCard:card];
+    /*
     [self updateCardButtonTitle:cardButton byCard:card];
     [cardButton setBackgroundImage:[self backgroundImageCard:card] forState:UIControlStateNormal];
     [self markCard:cardButton ifSelected:card];
-    cardButton.enabled = !card.isMatched;
+     */
+    if(card.isMatched) {
+      [self updateCardViewAsMatched:(UIView *)cardView];
+    }
   }
   self.scoreLabel.text = [NSString stringWithFormat:@"Score: %ld", self.game.score];
 
 }
 
-//abstract - used only in setCard
-- (void) markCard:(UIButton *)cardButton ifSelected:(Card *)card {
+
+- (void)updateCardViewAsSelectedOrNot:(UIView *)cardView accordingToCard:(Card *)card{
 
 }
 
+-(void)updateCardViewAsMatched:(UIView *)cardView {
+  cardView.userInteractionEnabled = NO;
+  cardView.alpha = 0.3f;
+}
+
+/*
 //abstract
 - (void)updateCardButtonTitle:(UIButton *)cardButton byCard:(Card *)card {
 
@@ -194,12 +194,15 @@ static const int MAX_CARD_HEIGHT = 100;
 {
   return nil;
 }
+ */
 
 //abstract
 - (NSInteger)getPlayMode
 {
   return 0;
 }
+
+
 
 
 @end
