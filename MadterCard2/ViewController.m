@@ -22,6 +22,7 @@
 @property (weak, nonatomic) IBOutlet UIView *gameView;
 @property (strong, nonatomic) Grid *gameGrid;
 @property (strong, nonatomic) NSMutableArray *cardsViews;
+@property (nonatomic) BOOL gameStarted;
 
 
 @end
@@ -49,10 +50,8 @@ static const int MAX_CARD_HEIGHT = 100;
 
 - (void)viewDidLoad {
   [self makeGameViewTransparent];
-  [self initializeCardsViews:self.cardsViews accordingToCards:self.game.cards];
-  for(UIView *cardView in self.cardsViews) {
-    [cardView addGestureRecognizer:[[UITapGestureRecognizer alloc] initWithTarget:self	action:@selector(tapCardView:)]];
-  }
+  [self createCardViews];
+
 }
 
 -(void)viewDidLayoutSubviews {
@@ -63,10 +62,12 @@ static const int MAX_CARD_HEIGHT = 100;
 
 -(void)viewDidAppear:(BOOL)animated
 {
-  //needs to take care of switching between the games!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
   [super viewDidAppear:animated];
-  [self putCardViewsInDeck];
-  [self dealCards];
+  if(!self.gameStarted) {
+    [self putCardViewsInDeck];
+    [self dealCards];
+  }
+
 }
 
 - (void)makeGameViewTransparent {
@@ -74,8 +75,14 @@ static const int MAX_CARD_HEIGHT = 100;
   self.gameView.backgroundColor = [UIColor clearColor];
 }
 
-- (void)initializeCardsViews:(NSMutableArray *)cardsViews accordingToCards:(NSMutableArray *)cards{
-
+- (void)createCardViews {
+  [self initializeCardsViews:self.cardsViews accordingToCards:self.game.cards];
+  for(UIView *cardView in self.cardsViews){
+    [cardView addGestureRecognizer:[[UITapGestureRecognizer alloc]
+                                    initWithTarget:self	action:@selector(tapCardView:)]];
+    [self.gameView addSubview:cardView];
+    
+  }
 }
 
 - (void)changeGridAccordingToLayout {
@@ -103,7 +110,6 @@ static const int MAX_CARD_HEIGHT = 100;
                                      self.gameGrid.cellSize.width,
                                      self.gameGrid.cellSize.height);
     cardView.frame = newCardFrame;
-    [self.gameView addSubview:cardView];
   }
 }
 
@@ -140,6 +146,9 @@ static const int MAX_CARD_HEIGHT = 100;
 }
 
 - (IBAction)tapCardView:(UITapGestureRecognizer *)gesture{
+  if(!self.gameStarted) {
+    self.gameStarted = YES;
+  }
   NSInteger cardIndex = [self.cardsViews indexOfObject:gesture.view];
   [self.game chooseCardAtIndex:cardIndex];
   [self updateUI];
@@ -147,10 +156,14 @@ static const int MAX_CARD_HEIGHT = 100;
 
 
 - (IBAction)touchResetButton:(UIButton *)sender {
-  self.game = [[CardMatchingGame alloc] initWithCardCount:[self.cardButtons count]
+  self.game = [[CardMatchingGame alloc] initWithCardCount:[self getNumberOfCards]
                                                 usingDeck:[self createDeck]
                                              withPlayMode:[self getPlayMode]];
-  [self updateUI];
+  [self removeCardViewsFromBoard:[self.cardsViews mutableCopy]];
+  [self createCardViews];
+  [self putCardViewsInDeck];
+  [self dealCards];
+  self.scoreLabel.text = [NSString stringWithFormat:@"Score: %ld", self.game.score];
 }
 
 
@@ -160,11 +173,6 @@ static const int MAX_CARD_HEIGHT = 100;
     NSInteger cardIndex = [self.cardsViews indexOfObject:cardView];
     Card *card = [self.game cardAtIndex:cardIndex];
     [self updateCardViewAsSelectedOrNot:cardView accordingToCard:card];
-    /*
-    [self updateCardButtonTitle:cardButton byCard:card];
-    [cardButton setBackgroundImage:[self backgroundImageCard:card] forState:UIControlStateNormal];
-    [self markCard:cardButton ifSelected:card];
-     */
     if(card.isMatched) {
       [self updateCardViewAsMatched:(UIView *)cardView];
     }
@@ -173,30 +181,22 @@ static const int MAX_CARD_HEIGHT = 100;
 
 }
 
+- (void)initializeCardsViews:(NSMutableArray *)cardsViews accordingToCards:(NSMutableArray *)cards{
+}
 
 - (void)updateCardViewAsSelectedOrNot:(UIView *)cardView accordingToCard:(Card *)card{
-
 }
 
--(void)updateCardViewAsMatched:(UIView *)cardView {
-  cardView.userInteractionEnabled = NO;
-  cardView.alpha = 0.3f;
+- (void)updateCardViewAsMatched:(UIView *)cardView {
 }
 
-/*
-//abstract
-- (void)updateCardButtonTitle:(UIButton *)cardButton byCard:(Card *)card {
-
+- (void)removeCardViewsFromBoard:(NSMutableArray *)cardViews {
+  for(UIView *cardView in cardViews) {
+    [cardView removeFromSuperview];
+    [self.cardsViews removeObject:cardView];
+  }
 }
 
-//abstract
-- (UIImage *)backgroundImageCard:(Card *)card
-{
-  return nil;
-}
- */
-
-//abstract
 - (NSInteger)getPlayMode
 {
   return 0;

@@ -28,6 +28,7 @@ static const int NUMBER_OF_CARDS = 50;
   return PLAY_MODE_TYPE;
 }
 
+/*
 -(void)updateCardButtonTitle:(UIButton *)cardButton byCard:(Card *)card{
   [cardButton setTitle:[self titleForCard:card] forState:UIControlStateNormal];
 }
@@ -39,6 +40,7 @@ static const int NUMBER_OF_CARDS = 50;
 - (UIImage *)backgroundImageCard:(Card *)card {
   return [UIImage imageNamed:card.isChosen ? @"carfront" : @"cardback"];
 }
+ */
 
 - (void)initializeCardsViews:(NSMutableArray *)cardsViews accordingToCards:(NSMutableArray *)cards{
   for(PlayingCard *card in cards) {
@@ -56,6 +58,11 @@ static const int NUMBER_OF_CARDS = 50;
 
 - (void)updateCardViewAsSelectedOrNot:(UIView *)cardView accordingToCard:(Card *)card{
   [(PlayingCardView *)cardView setFaceUp:card.isChosen];
+}
+
+- (void)updateCardViewAsMatched:(UIView *)cardView {
+  cardView.userInteractionEnabled = NO;
+  cardView.alpha = 0.3f;
 }
 
 

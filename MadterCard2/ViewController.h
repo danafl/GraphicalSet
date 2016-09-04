@@ -17,6 +17,7 @@
 - (NSInteger)getPlayMode;
 - (void)initializeCardsViews:(NSMutableArray *)cardsViews accordingToCards:(NSMutableArray *)cards;
 - (NSUInteger)getNumberOfCards;
+- (void)updateCardViewAsMatched:(UIView *)cardView;
 
 /*
  - (void)updateCardButtonTitle:(UIButton *)cardButton byCard:(Card *)card;
