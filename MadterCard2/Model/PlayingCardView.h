@@ -13,7 +13,6 @@
 @interface PlayingCardView : CardView
 @property (nonatomic) NSUInteger rank;
 @property (strong, nonatomic) NSString *suit;
-@property (nonatomic) BOOL faceUp;
 
 
 

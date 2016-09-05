@@ -34,12 +34,12 @@
   }
 }
 
--(void)addCard:(Card *)card
+- (void)addCard:(Card *)card
 {
   [self.cards addObject:card];
 }
 
--(Card *)drawRandomCard
+- (Card *)drawRandomCard
 {
   Card *randomCard = nil;
   if([self.cards count])
@@ -49,11 +49,13 @@
     //remove the card from the deck
     [self.cards removeObjectAtIndex:index];
   }
-
-
   return randomCard;
-
-
 }
+
+- (NSUInteger)getNumberOfCardsInDeck {
+  return [self.cards count];
+}
+
+
 
 @end

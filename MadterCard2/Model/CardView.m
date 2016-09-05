@@ -10,6 +10,21 @@
 
 @implementation CardView
 
+- (void)setFaceUp:(BOOL)faceUp
+{
+  if(faceUp != _faceUp) {
+    [UIView transitionWithView:self
+                      duration:0.5
+                       options:UIViewAnimationOptionTransitionFlipFromLeft
+                    animations:^{
+                      _faceUp = faceUp;
+                    }
+                    completion:^(BOOL finished) {}];
+    [self setNeedsDisplay];
+  }
+
+}
+
 
 
 @end

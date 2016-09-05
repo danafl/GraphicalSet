@@ -8,6 +8,8 @@
 
 #import <UIKit/UIKit.h>
 #import "Deck.h"
+#import "CardMatchingGame.h"
+
 
 @interface ViewController : UIViewController
 
@@ -18,12 +20,17 @@
 - (void)initializeCardsViews:(NSMutableArray *)cardsViews accordingToCards:(NSMutableArray *)cards;
 - (NSUInteger)getNumberOfCards;
 - (void)updateCardViewAsMatched:(UIView *)cardView;
+- (void)removeCardViewFromBoard:(UIView *)cardView;
+- (CGFloat)getGameViewWidth;
+- (CGFloat)getGameViewHeight;
+- (BOOL)isCardFaceUpAfterDealing;
+- (void)addSubviewToGameView:(UIView *)view;
+- (void)addCards:(NSUInteger)numberOfCards;
+- (CGRect)getDeckFrame;
+- (void)moveCardViewsToPalcesOnGrid;
 
-/*
- - (void)updateCardButtonTitle:(UIButton *)cardButton byCard:(Card *)card;
- - (UIImage *)backgroundImageCard:(Card *)card;
- */
-
+@property (nonatomic) int animationNumber;
+@property (strong, nonatomic) CardMatchingGame *game;
 
 
 

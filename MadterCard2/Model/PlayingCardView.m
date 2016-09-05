@@ -44,7 +44,7 @@
   [self setNeedsDisplay];
 }
 
-- (void)setFaceUp:(BOOL)faceUp
+/*- (void)setFaceUp:(BOOL)faceUp
 {
   if(faceUp != _faceUp) {
     [UIView transitionWithView:self
@@ -57,7 +57,7 @@
     [self setNeedsDisplay];
   }
 
-}
+}*/
 
 - (NSString *)rankAsString
 {

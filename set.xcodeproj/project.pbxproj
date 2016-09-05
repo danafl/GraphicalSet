@@ -204,11 +204,11 @@
 				6D81EB8C1D6C6B96006CFAE5 /* Card.m */,
 				6D81EB8B1D6C6B96006CFAE5 /* Card.h */,
 				6D81EB8F1D6C6BE6006CFAE5 /* Deck.h */,
+				6D81EB901D6C6BE6006CFAE5 /* Deck.m */,
 				6D81EB921D6C6C33006CFAE5 /* PlayingCard.h */,
 				6D81EB981D6C6CE1006CFAE5 /* PlayingCardDeck.h */,
 				6D81EB991D6C6CE1006CFAE5 /* PlayingCardDeck.m */,
 				6D81EB931D6C6C33006CFAE5 /* PlayingCard.m */,
-				6D81EB901D6C6BE6006CFAE5 /* Deck.m */,
 			);
 			name = Model;
 			sourceTree = "<group>";

@@ -59,8 +59,6 @@
     _selected = selected;
     [self setNeedsDisplay];
   }
-
-
 }
 
 
@@ -88,7 +86,12 @@
   [roundedRect stroke];
 
   // TODO:(Dana) Draw cards
-  [self drawCorners];
+  if(self.faceUp)
+  {
+    [self drawCorners];
+  } else {
+    [[UIImage imageNamed:@"cardback"] drawInRect:self.bounds];
+  }
 
 }
 

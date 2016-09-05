@@ -10,6 +10,7 @@
 
 @interface CardMatchingGame()
 @property (readwrite, nonatomic) NSInteger score;
+@property (strong, nonatomic) Deck * deckWithRemainingCards;
 @end
 
 
@@ -54,6 +55,7 @@ static const int COST_TO_CHOOSE = 1;
       }
     }
   }
+  self.deckWithRemainingCards = deck;
   return self;
 }
 
@@ -64,7 +66,21 @@ static const int COST_TO_CHOOSE = 1;
   return self;
 }
 
--(void)chooseCardAtIndex:(NSUInteger)index
+- (NSMutableArray *)addCardsToGame:(NSUInteger)numberOfCardsToAdd {
+  NSMutableArray *cardsAdded = [[NSMutableArray alloc] init];
+  for(int i =0; i<numberOfCardsToAdd; i++) {
+    Card *card = [self.deckWithRemainingCards drawRandomCard];
+    if(card) {
+      [cardsAdded addObject:card];
+    }
+
+  }
+  [self.cards addObjectsFromArray:cardsAdded];
+  return cardsAdded;
+}
+
+
+- (void)chooseCardAtIndex:(NSUInteger)index
 {
   Card *card = [self cardAtIndex:index];
 
@@ -130,8 +146,7 @@ static const int COST_TO_CHOOSE = 1;
   self.lastChosenCards = chosenCards;
 
   //the card is chosen in this play, unless it is not chosen (was chosen before)
-  if(card.chosen)
-  {
+  if(card.chosen) {
     [self.lastChosenCards addObject:card];
   }
 
@@ -144,6 +159,14 @@ static const int COST_TO_CHOOSE = 1;
 - (instancetype)init
 {
   return nil;
+}
+
+- (BOOL)deckFinished {
+  if([self.deckWithRemainingCards getNumberOfCardsInDeck]) {
+    return NO;
+  } else {
+    return YES;
+  }
 }
 
 

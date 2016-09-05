@@ -11,14 +11,35 @@
 #import "SetGameCard.h"
 #import "SetCardView.h"
 
+@interface SetGameCardViewController()
+@property (strong,nonatomic) SetCardView *addCardsVeiw;
+@property (nonatomic) NSUInteger numberOfCards;
+
+@end
+
 
 @implementation SetGameCardViewController
 static const int PLAY_MODE_TYPE = 3;
 static const int NUMBER_OF_CARDS = 12;
+static const int CARDS_TO_ADD = 3;
+
+-(NSUInteger)numberOfCards {
+  if(!_numberOfCards)
+  {
+    _numberOfCards = NUMBER_OF_CARDS;
+  }
+  return _numberOfCards;
+}
 
 - (void)viewDidLoad {
+  [self initializeAddCardsView];
   [super viewDidLoad];
   [self updateUI];
+}
+
+- (void)viewDidAppear:(BOOL)animated {
+  [super viewDidAppear:animated];
+  self.addCardsVeiw.frame = [self getDeckFrame];
 }
 
 - (Deck *)createDeck {
@@ -28,65 +49,6 @@ static const int NUMBER_OF_CARDS = 12;
 - (NSInteger)getPlayMode {
   return PLAY_MODE_TYPE;
 }
-
-/*
--(void)updateCardButtonTitle:(UIButton *)cardButton byCard:(Card *)card {
-  [cardButton setAttributedTitle:[self titleForCard:card] forState:UIControlStateNormal];
-}
-
-- (NSAttributedString *)titleForCard:(Card *)card {
-  SetGameCard *setCard = (SetGameCard *)card;
-  NSMutableAttributedString *title = [[NSMutableAttributedString alloc]
-                                      initWithString:
-                                      [setCard.number stringByAppendingString:setCard.symbol]];
-  UIColor *foregroundColor = [self getForegroundColorAttribute:setCard];
-  UIColor *backgroundColor = [self getBackgroundColorAttribute:setCard];
-  [title addAttributes:@{NSForegroundColorAttributeName: foregroundColor,
-                         NSBackgroundColorAttributeName:backgroundColor}
-                 range:NSMakeRange(0,[title length])];
-
-  return title;
-}
-
-- (UIImage *)backgroundImageCard:(Card *)card {
-  return [UIImage imageNamed:@"carfront"];
-}
-
-- (UIColor *)getForegroundColorAttribute:(SetGameCard *)card {
-  UIColor *color = nil;
-  if([card.color isEqualToString:@"red"]) {
-    color = [UIColor redColor];
-  } else if ([card.color isEqualToString:@"green"]) {
-    color = [UIColor greenColor];
-  } else {
-    color = [UIColor purpleColor];
-  }
-  return color;
-}
-
-- (UIColor *)getBackgroundColorAttribute:(SetGameCard *)card {
-  UIColor *color = nil;
-  if([card.shading isEqualToString:@"solid"]) {
-    color = [UIColor yellowColor];
-  } else if ([card.shading isEqualToString:@"striped"]) {
-    color = [UIColor blueColor];
-  } else {
-    color = [UIColor orangeColor];
-  }
-  return color;
-}
-
-//cahnged it's name to updateCardViewAfterSelected!!!! need to implement here
-- (void) markCard:(UIButton *)cardButton ifSelected:(Card *)card{
-  if(card.isChosen)
-  {
-    [cardButton setBackgroundColor:[UIColor yellowColor]];
-  } else {
-    [cardButton setBackgroundColor:nil];
-  }
-
-}
-*/
 
 - (void)initializeCardsViews:(NSMutableArray *)cardsViews accordingToCards:(NSMutableArray *)cards{
   for(SetGameCard *card in cards) {
@@ -101,7 +63,7 @@ static const int NUMBER_OF_CARDS = 12;
 }
 
 - (NSUInteger)getNumberOfCards {
-  return NUMBER_OF_CARDS;
+  return self.numberOfCards;
 }
 
 - (void)updateCardViewAsSelectedOrNot:(UIView *)cardView accordingToCard:(Card *)card{
@@ -109,8 +71,39 @@ static const int NUMBER_OF_CARDS = 12;
 }
 
 - (void)updateCardViewAsMatched:(UIView *)cardView {
-  cardView.userInteractionEnabled = NO;
-  cardView.alpha = 0.3f;
+  self.animationNumber++;
+  [UIView animateWithDuration:1.0
+                   animations:^{
+                     int x = [self getGameViewWidth]/2;
+                     int y = [self getGameViewHeight];
+                     cardView.center = CGPointMake(x, -y);
+                   }
+                   completion:^(BOOL finished) {
+                     [self removeCardViewFromBoard:cardView];
+                     self.animationNumber--;
+                     [self moveCardViewsToPalcesOnGrid];
+                   }];
 }
+
+- (BOOL)isCardFaceUpAfterDealing {
+  return YES;
+}
+
+- (void)initializeAddCardsView {
+  self.addCardsVeiw = [[SetCardView alloc] init];
+  [self.addCardsVeiw addGestureRecognizer:[[UITapGestureRecognizer alloc]
+                                 initWithTarget:self	action:@selector(tapAddCardsView:)]];
+  [self addSubviewToGameView:self.addCardsVeiw];
+}
+
+- (IBAction)tapAddCardsView:(UITapGestureRecognizer *)gesture{
+  [self addCards:CARDS_TO_ADD];
+  if([self.game deckFinished]) {
+    [self.addCardsVeiw removeFromSuperview];
+  }
+}
+
+
+
 
 @end
