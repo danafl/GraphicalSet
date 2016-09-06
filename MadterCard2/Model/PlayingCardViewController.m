@@ -17,7 +17,7 @@
 @implementation PlayingCardViewController
 
 static const int PLAY_MODE_TYPE = 2;
-static const int NUMBER_OF_CARDS = 50;
+static const int STARTING_NUMBER_OF_CARDS = 50;
 
 - (Deck *)createDeck {
   return [[PlayingCardDeck alloc]init];
@@ -28,7 +28,8 @@ static const int NUMBER_OF_CARDS = 50;
   return PLAY_MODE_TYPE;
 }
 
-- (void)initializeCardsViews:(NSMutableArray *)cardsViews accordingToCards:(NSMutableArray *)cards{
+- (NSMutableArray *)initializeCardsViewsOfCards:(NSMutableArray *)cards{
+  NSMutableArray *cardsViews = [[NSMutableArray alloc] init];
   for(PlayingCard *card in cards) {
     CGRect newCardFrame = CGRectZero;
     PlayingCardView *newCardView = [[PlayingCardView alloc] initWithFrame:newCardFrame];
@@ -36,11 +37,13 @@ static const int NUMBER_OF_CARDS = 50;
     newCardView.rank = card.rank;
     [cardsViews addObject:newCardView];
   }
+  return cardsViews;
 }
 
-- (NSUInteger)getNumberOfCards {
-  return NUMBER_OF_CARDS;
+- (NSUInteger)getStartingNumberOfCards {
+  return STARTING_NUMBER_OF_CARDS;
 }
+
 
 - (void)updateCardViewAsSelectedOrNot:(UIView *)cardView accordingToCard:(Card *)card{
   [(PlayingCardView *)cardView setFaceUp:card.isChosen];

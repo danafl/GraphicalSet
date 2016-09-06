@@ -63,8 +63,8 @@ static const int MAX_CARD_HEIGHT = 100;
 {
   [super viewDidAppear:animated];
   if(!self.gameStarted) {
-    [self putCardViewsInDeck];
-    [self moveCardViewsToPalcesOnGrid];
+    [self putCardViewsInDeck:self.cardsViews];
+    [self animateMoveingCardViewsToPalcesOnGrid];
     self.gameStarted = YES;
   }
 
@@ -75,17 +75,19 @@ static const int MAX_CARD_HEIGHT = 100;
   self.gameView.backgroundColor = [UIColor clearColor];
 }
 
-- (void)createCardViewsOfCards:(NSMutableArray *)cards {
-  [self initializeCardsViews:self.cardsViews accordingToCards:cards];
-  for(UIView *cardView in self.cardsViews){
+- (NSMutableArray *)createCardViewsOfCards:(NSMutableArray *)cards {
+  NSMutableArray *newCardViews = [self initializeCardsViewsOfCards:cards];
+  [self.cardsViews addObjectsFromArray:newCardViews];
+  for(UIView *cardView in newCardViews){
     [cardView addGestureRecognizer:[[UITapGestureRecognizer alloc]
                                     initWithTarget:self	action:@selector(tapCardView:)]];
     [self.gameView addSubview:cardView];
   }
+  return newCardViews;
 }
 
 - (void)changeGridAccordingToLayout {
-  self.gameGrid.minimumNumberOfCells = [self getNumberOfCards];
+  self.gameGrid.minimumNumberOfCells = [self.cardsViews count];
   self.gameGrid.size = CGSizeMake(self.gameView.frame.size.width,
                                   self.gameView.frame.size.height - MAX_CARD_HEIGHT) ;
   self.gameGrid.cellAspectRatio = ASPECT_RATIO;
@@ -101,14 +103,9 @@ static const int MAX_CARD_HEIGHT = 100;
   }
 }
 
-- (void)putCardViewsInDeck {
-  int cardXPosition = (self.gameView.bounds.size.width - self.gameGrid.cellSize.width)/ 2;
-  int cardYPosition = (self.gameView.bounds.size.height - self.gameGrid.cellSize.height);
-  for(UIView *cardView in self.cardsViews) {
-    CGRect newCardFrame = CGRectMake(cardXPosition, cardYPosition,
-                                     self.gameGrid.cellSize.width,
-                                     self.gameGrid.cellSize.height);
-    cardView.frame = newCardFrame;
+- (void)putCardViewsInDeck:(NSMutableArray *)cardViews {
+  for(UIView *cardView in cardViews) {
+    cardView.frame = [self getDeckFrame];
   }
 }
 
@@ -121,10 +118,10 @@ static const int MAX_CARD_HEIGHT = 100;
   return newCardFrame;
 }
 
-- (void)moveCardViewsToPalcesOnGrid {
+- (void)animateMoveingCardViewsToPalcesOnGrid {
   __weak ViewController *weakSelf = self;
   [UIView animateWithDuration:1.0
-                        delay:1.0
+                        delay:0.3
                       options:UIViewAnimationOptionCurveEaseIn
                    animations:^{
                      [weakSelf updateCardViewsLocations];
@@ -137,20 +134,23 @@ static const int MAX_CARD_HEIGHT = 100;
 - (CardMatchingGame *)game{
   if(!_game)
   {
-    _game = [[CardMatchingGame alloc] initWithCardCount:[self getNumberOfCards]
+    _game = [[CardMatchingGame alloc] initWithCardCount:[self getStartingNumberOfCards]
                                               usingDeck:[self createDeck]
                                            withPlayMode:[self getPlayMode]];
   }
   return _game;
 }
 
-
 - (Deck *)createDeck
 {
   return nil;
 }
 
-- (NSUInteger)getNumberOfCards {
+- (NSUInteger)getStartingNumberOfCards {
+  return 0;
+}
+
+- (NSUInteger)getMaxNumberOfCards {
   return 0;
 }
 
@@ -162,15 +162,17 @@ static const int MAX_CARD_HEIGHT = 100;
 
 
 - (IBAction)touchResetButton:(UIButton *)sender {
-  self.game = [[CardMatchingGame alloc] initWithCardCount:[self getNumberOfCards]
+  self.game = [[CardMatchingGame alloc] initWithCardCount:[self getStartingNumberOfCards]
                                                 usingDeck:[self createDeck]
                                              withPlayMode:[self getPlayMode]];
   for(UIView *cardView in [self.cardsViews mutableCopy]) {
     [self removeCardViewFromBoard:cardView];
   }
   [self createCardViewsOfCards:self.game.cards];
-  [self putCardViewsInDeck];
-  [self moveCardViewsToPalcesOnGrid];
+  self.gameGrid.minimumNumberOfCells = [self.cardsViews count];
+  [self putCardViewsInDeck:self.cardsViews];
+  [self animateMoveingCardViewsToPalcesOnGrid];
+  [self resetSubclassElements];
   self.scoreLabel.text = [NSString stringWithFormat:@"Score: %ld", self.game.score];
 }
 
@@ -189,7 +191,8 @@ static const int MAX_CARD_HEIGHT = 100;
 
 }
 
-- (void)initializeCardsViews:(NSMutableArray *)cardsViews accordingToCards:(NSMutableArray *)cards{
+- (NSMutableArray *)initializeCardsViewsOfCards:(NSMutableArray *)cards{
+  return nil;
 }
 
 - (void)updateCardViewAsSelectedOrNot:(UIView *)cardView accordingToCard:(Card *)card{
@@ -233,8 +236,14 @@ static const int MAX_CARD_HEIGHT = 100;
 }
 
 - (void)addCards:(NSUInteger)numberOfCards {
-  //[self.game addCardsToGame:numberOfCards];
-  // TODO:(Dana) create the views and deal them
+  NSMutableArray *newCards = [self.game addCardsToGame:numberOfCards];
+  NSMutableArray *newCardsViews = [self createCardViewsOfCards:newCards];
+  self.gameGrid.minimumNumberOfCells = [self.cardsViews count];
+  [self putCardViewsInDeck:newCardsViews];
+  [self animateMoveingCardViewsToPalcesOnGrid];
+}
+
+- (void)resetSubclassElements {
 }
 
 

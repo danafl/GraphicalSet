@@ -17,8 +17,8 @@
 - (Deck *)createDeck;
 - (void)updateCardViewAsSelectedOrNot:(UIView *)cardView accordingToCard:(Card *)card;
 - (NSInteger)getPlayMode;
-- (void)initializeCardsViews:(NSMutableArray *)cardsViews accordingToCards:(NSMutableArray *)cards;
-- (NSUInteger)getNumberOfCards;
+- (NSMutableArray *)initializeCardsViewsOfCards:(NSMutableArray *)cards;
+- (NSUInteger)getStartingNumberOfCards;
 - (void)updateCardViewAsMatched:(UIView *)cardView;
 - (void)removeCardViewFromBoard:(UIView *)cardView;
 - (CGFloat)getGameViewWidth;
@@ -27,7 +27,8 @@
 - (void)addSubviewToGameView:(UIView *)view;
 - (void)addCards:(NSUInteger)numberOfCards;
 - (CGRect)getDeckFrame;
-- (void)moveCardViewsToPalcesOnGrid;
+- (void)animateMoveingCardViewsToPalcesOnGrid;
+- (void)resetSubclassElements;
 
 @property (nonatomic) int animationNumber;
 @property (strong, nonatomic) CardMatchingGame *game;

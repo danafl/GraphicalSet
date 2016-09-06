@@ -13,23 +13,14 @@
 
 @interface SetGameCardViewController()
 @property (strong,nonatomic) SetCardView *addCardsVeiw;
-@property (nonatomic) NSUInteger numberOfCards;
-
 @end
 
 
 @implementation SetGameCardViewController
 static const int PLAY_MODE_TYPE = 3;
-static const int NUMBER_OF_CARDS = 12;
+static const int STARTING_NUMBER_OF_CARDS = 12;
 static const int CARDS_TO_ADD = 3;
 
--(NSUInteger)numberOfCards {
-  if(!_numberOfCards)
-  {
-    _numberOfCards = NUMBER_OF_CARDS;
-  }
-  return _numberOfCards;
-}
 
 - (void)viewDidLoad {
   [self initializeAddCardsView];
@@ -50,7 +41,8 @@ static const int CARDS_TO_ADD = 3;
   return PLAY_MODE_TYPE;
 }
 
-- (void)initializeCardsViews:(NSMutableArray *)cardsViews accordingToCards:(NSMutableArray *)cards{
+- (NSMutableArray *)initializeCardsViewsOfCards:(NSMutableArray *)cards{
+  NSMutableArray *cardsViews = [[NSMutableArray alloc] init];
   for(SetGameCard *card in cards) {
     CGRect newCardFrame = CGRectZero;
     SetCardView *newCardView = [[SetCardView alloc] initWithFrame:newCardFrame];
@@ -60,11 +52,14 @@ static const int CARDS_TO_ADD = 3;
     newCardView.number = card.number;
     [cardsViews addObject:newCardView];
   }
+  return cardsViews;
 }
 
-- (NSUInteger)getNumberOfCards {
-  return self.numberOfCards;
+- (NSUInteger)getStartingNumberOfCards {
+  return STARTING_NUMBER_OF_CARDS;
 }
+
+
 
 - (void)updateCardViewAsSelectedOrNot:(UIView *)cardView accordingToCard:(Card *)card{
   [(SetCardView *)cardView setSelected:card.isChosen];
@@ -81,7 +76,7 @@ static const int CARDS_TO_ADD = 3;
                    completion:^(BOOL finished) {
                      [self removeCardViewFromBoard:cardView];
                      self.animationNumber--;
-                     [self moveCardViewsToPalcesOnGrid];
+                     [self animateMoveingCardViewsToPalcesOnGrid];
                    }];
 }
 
@@ -98,9 +93,15 @@ static const int CARDS_TO_ADD = 3;
 
 - (IBAction)tapAddCardsView:(UITapGestureRecognizer *)gesture{
   [self addCards:CARDS_TO_ADD];
+  self.addCardsVeiw.frame = [self getDeckFrame];
   if([self.game deckFinished]) {
-    [self.addCardsVeiw removeFromSuperview];
+    self.addCardsVeiw.hidden = YES;
   }
+}
+
+- (void)resetSubclassElements {
+  self.addCardsVeiw.hidden = NO;
+  self.addCardsVeiw.frame = [self getDeckFrame];
 }
 
 
