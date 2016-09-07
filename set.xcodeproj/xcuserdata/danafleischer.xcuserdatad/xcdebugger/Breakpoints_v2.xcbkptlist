@@ -10,11 +10,11 @@
             ignoreCount = "0"
             continueAfterRunningActions = "No"
             filePath = "MadterCard2/ViewController.m"
-            timestampString = "494758112.437577"
+            timestampString = "494926303.463603"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "91"
-            endingLineNumber = "91"
+            startingLineNumber = "124"
+            endingLineNumber = "124"
             landmarkName = "-changeGridAccordingToLayout"
             landmarkType = "5">
          </BreakpointContent>
@@ -26,11 +26,11 @@
             ignoreCount = "0"
             continueAfterRunningActions = "No"
             filePath = "MadterCard2/ViewController.m"
-            timestampString = "494758112.437577"
+            timestampString = "494926303.463603"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "93"
-            endingLineNumber = "93"
+            startingLineNumber = "126"
+            endingLineNumber = "126"
             landmarkName = "-changeGridAccordingToLayout"
             landmarkType = "5">
          </BreakpointContent>
@@ -42,11 +42,11 @@
             ignoreCount = "0"
             continueAfterRunningActions = "No"
             filePath = "MadterCard2/ViewController.m"
-            timestampString = "494758112.437577"
+            timestampString = "494926303.463603"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "105"
-            endingLineNumber = "105"
+            startingLineNumber = "138"
+            endingLineNumber = "138"
             landmarkName = "-putCardViewsInDeck:"
             landmarkType = "5">
          </BreakpointContent>

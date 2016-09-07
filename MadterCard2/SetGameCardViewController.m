@@ -99,9 +99,18 @@ static const int CARDS_TO_ADD = 3;
   }
 }
 
-- (void)resetSubclassElements {
+- (void)makeSubclassSubviewsReappear {
   self.addCardsVeiw.hidden = NO;
+}
+
+- (void)moveSubclassSubviewsToStartingLocations {
   self.addCardsVeiw.frame = [self getDeckFrame];
+}
+
+- (CardView *)createDeckControlView {
+  CGRect newCardFrame = CGRectZero;
+  SetCardView *newCardView = [[SetCardView alloc] initWithFrame:newCardFrame];
+  return newCardView;
 }
 
 

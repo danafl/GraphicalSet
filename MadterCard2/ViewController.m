@@ -21,6 +21,9 @@
 @property (strong, nonatomic) Grid *gameGrid;
 @property (strong, nonatomic) NSMutableArray *cardsViews;
 @property (nonatomic) BOOL gameStarted;
+@property (strong, nonatomic) CardView *deckControlView;
+@property (strong, nonatomic) UIDynamicAnimator *animator;
+@property (strong,nonatomic) UIAttachmentBehavior *attachment;
 
 
 @end
@@ -31,6 +34,13 @@
 static const float ASPECT_RATIO = 0.6;
 static const int MAX_CARD_HEIGHT = 100;
 
+
+- (UIDynamicAnimator *)animator {
+  if(!_animator) {
+    _animator = [[UIDynamicAnimator alloc] initWithReferenceView:self.gameView];
+  }
+  return _animator;
+}
 
 -(NSMutableArray *)cardsViews {
   if(!_cardsViews) {
@@ -46,14 +56,23 @@ static const int MAX_CARD_HEIGHT = 100;
   return _gameGrid;
 }
 
+- (CardView *)deckControlView {
+  if(!_deckControlView) {
+    _deckControlView = [self createDeckControlView];
+  }
+  return _deckControlView;
+}
+
 - (void)viewDidLoad {
   [self makeGameViewTransparent];
   [self createCardViewsOfCards:self.game.cards];
+  [self addGesturesToDeckControlView];
+  [self addPinchGestureToGame];
 
 }
 
 -(void)viewDidLayoutSubviews {
-  if(self.animationNumber == 0) {
+  if(self.animationNumber == 0 && (!([self.gameView.subviews containsObject:self.deckControlView]))) {
     [self changeGridAccordingToLayout];
     [self updateCardViewsLocations];
   }
@@ -68,6 +87,20 @@ static const int MAX_CARD_HEIGHT = 100;
     self.gameStarted = YES;
   }
 
+}
+
+- (void)addGesturesToDeckControlView {
+  [self.deckControlView addGestureRecognizer:[[UIPanGestureRecognizer alloc]
+                                              initWithTarget:self
+                                              action:@selector(panDeckControlView:)]];
+  [self.deckControlView addGestureRecognizer:[[UITapGestureRecognizer alloc]
+                                              initWithTarget:self
+                                              action:@selector(tapDeckControlView:)]];
+}
+
+- (void)addPinchGestureToGame {
+  [self.gameView addGestureRecognizer:[[UIPinchGestureRecognizer alloc]
+                                       initWithTarget:self action:@selector(pinch:)]];
 }
 
 - (void)makeGameViewTransparent {
@@ -130,6 +163,39 @@ static const int MAX_CARD_HEIGHT = 100;
 
 }
 
+- (void)animateMoveingSubclassSubviews {
+  __weak ViewController *weakSelf = self;
+  [UIView animateWithDuration:1.0
+                        delay:0.3
+                      options:UIViewAnimationOptionCurveEaseIn
+                   animations:^{
+                     [weakSelf moveSubclassSubviewsToStartingLocations];
+                   }
+                   completion:^(BOOL finished){}];
+
+}
+
+- (void)animateMoveingCardViewsToDeck {
+  self.animationNumber++;
+  __weak ViewController *weakSelf = self;
+  [UIView animateWithDuration:1.0
+                        delay:0.3
+                      options:UIViewAnimationOptionCurveEaseIn
+                   animations:^{
+                     for(UIView *view in self.gameView.subviews){
+                       view.frame = [weakSelf getDeckFrame];
+                     }
+                   }
+                   completion:^(BOOL finished){
+                     if (finished){
+                       self.deckControlView.frame = [self getDeckFrame];
+                       [self.gameView addSubview:self.deckControlView];
+                       self.animationNumber--;
+                     }
+                     }];
+
+}
+
 
 - (CardMatchingGame *)game{
   if(!_game)
@@ -160,6 +226,42 @@ static const int MAX_CARD_HEIGHT = 100;
   [self updateUI];
 }
 
+- (IBAction)pinch:(UIPinchGestureRecognizer *)gesture {
+  if (gesture.state == UIGestureRecognizerStateEnded) {
+    [self animateMoveingCardViewsToDeck];
+  }
+}
+
+- (IBAction)panDeckControlView:(UIPanGestureRecognizer *)gesture {
+  CGPoint gesturePoint = [gesture locationInView:self.gameView];
+  if(gesture.state == UIGestureRecognizerStateBegan) {
+    [self attachDeckControlViewToPoint:gesturePoint];
+  } else if (gesture.state == UIGestureRecognizerStateChanged) {
+    self.attachment.anchorPoint = gesturePoint;
+    [self attachCardsToDeckControlView];
+  } else if (gesture.state == UIGestureRecognizerStateEnded) {
+    [self.animator removeBehavior:self.attachment];
+
+  }
+}
+
+- (void)attachDeckControlViewToPoint:(CGPoint)anchorPoint {
+  self.attachment = [[UIAttachmentBehavior alloc] initWithItem:self.deckControlView attachedToAnchor:anchorPoint];
+  [self.animator addBehavior:self.attachment];
+}
+
+- (void)attachCardsToDeckControlView {
+  for(UIView *view in self.gameView.subviews) {
+    view.frame = self.deckControlView.frame;
+  }
+}
+
+- (IBAction)tapDeckControlView:(UITapGestureRecognizer *)gesture {
+  [self animateMoveingCardViewsToPalcesOnGrid];
+  [self animateMoveingSubclassSubviews];
+  [self.deckControlView removeFromSuperview];
+}
+
 
 - (IBAction)touchResetButton:(UIButton *)sender {
   self.game = [[CardMatchingGame alloc] initWithCardCount:[self getStartingNumberOfCards]
@@ -172,7 +274,7 @@ static const int MAX_CARD_HEIGHT = 100;
   self.gameGrid.minimumNumberOfCells = [self.cardsViews count];
   [self putCardViewsInDeck:self.cardsViews];
   [self animateMoveingCardViewsToPalcesOnGrid];
-  [self resetSubclassElements];
+  [self resetSubclassSubviews];
   self.scoreLabel.text = [NSString stringWithFormat:@"Score: %ld", self.game.score];
 }
 
@@ -189,6 +291,10 @@ static const int MAX_CARD_HEIGHT = 100;
   }
   self.scoreLabel.text = [NSString stringWithFormat:@"Score: %ld", self.game.score];
 
+}
+
+- (CardView *)createDeckControlView {
+  return nil;
 }
 
 - (NSMutableArray *)initializeCardsViewsOfCards:(NSMutableArray *)cards{
@@ -243,7 +349,17 @@ static const int MAX_CARD_HEIGHT = 100;
   [self animateMoveingCardViewsToPalcesOnGrid];
 }
 
-- (void)resetSubclassElements {
+- (void)resetSubclassSubviews {
+  [self makeSubclassSubviewsReappear];
+  [self moveSubclassSubviewsToStartingLocations];
+}
+
+- (void)makeSubclassSubviewsReappear {
+
+}
+
+- (void)moveSubclassSubviewsToStartingLocations {
+
 }
 
 

@@ -28,7 +28,9 @@
 - (void)addCards:(NSUInteger)numberOfCards;
 - (CGRect)getDeckFrame;
 - (void)animateMoveingCardViewsToPalcesOnGrid;
-- (void)resetSubclassElements;
+- (void)makeSubclassSubviewsReappear;
+- (void)moveSubclassSubviewsToStartingLocations;
+
 
 @property (nonatomic) int animationNumber;
 @property (strong, nonatomic) CardMatchingGame *game;

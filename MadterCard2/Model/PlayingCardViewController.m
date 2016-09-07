@@ -58,6 +58,11 @@ static const int STARTING_NUMBER_OF_CARDS = 50;
   return NO;
 }
 
+- (CardView *)createDeckControlView {
+  CGRect newCardFrame = CGRectZero;
+  PlayingCardView *newCardView = [[PlayingCardView alloc] initWithFrame:newCardFrame];
+  return newCardView;
+}
 
 
 @end
